@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HX & WeDiscover</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f2f9;color:#232323;min-height:100vh}
+header{background:linear-gradient(135deg,#3a1f6e 0%,#542E91 70%,#6b3db8 100%);padding:2.8rem 2rem 2.4rem;text-align:center}
+header .eyebrow{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.5rem}
+header h1{font-size:2.4rem;font-weight:800;color:#FDDC06;letter-spacing:-.03em;line-height:1.1}
+.hdiv{width:40px;height:3px;background:#FDDC06;border-radius:2px;margin:.8rem auto 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;padding:2rem;max-width:1300px;margin:0 auto}
+.card{background:#fff;border-radius:20px;overflow:hidden;border:1.5px solid #ede8f7;transition:box-shadow .25s,transform .25s,border-color .25s;display:flex;flex-direction:column}
+.card:hover{box-shadow:0 12px 40px rgba(84,46,145,.13);transform:translateY(-3px);border-color:#c4a8e8}
+.ca{height:4px}.ca.live{background:#00B0A6}.ca.inflight{background:#542E91}.ca.planned{background:#b4b2a9}
+.card-top{padding:1.5rem 1.5rem 1rem;flex:1}
+.card-meta{margin-bottom:1rem}
+.sbadge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:20px}
+.sl{background:#e1f7f2;color:#0a6e52}.si{background:#ede9fc;color:#542E91}.sp{background:#f0f0f0;color:#5F5E5A}
+.sd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sdl{background:#00B0A6}.sdi{background:#542E91}.sdp{background:#888780}
+.card-title{font-size:1.2rem;font-weight:800;color:#1a1040;margin-bottom:.35rem;line-height:1.2;letter-spacing:-.01em}
+.card-sub{font-size:12.5px;color:#6b6280;line-height:1.6}
+.card-metrics{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #f0ecfa;background:#faf8fe}
+.metric{padding:.9rem 1.25rem;border-right:1px solid #f0ecfa}.metric:last-child{border-right:none}
+.ml{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:#a09ab5;margin-bottom:3px;font-weight:600}
+.mv{font-size:1rem;font-weight:800;color:#1a1040;line-height:1.2}.mv.hi{color:#542E91}
+.card-next{padding:.7rem 1.25rem;border-top:1px solid #f0ecfa;display:flex;align-items:flex-start;gap:8px;background:#fffdf0}
+.np{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#7a5a00;background:#FDDC06;padding:3px 8px;border-radius:10px;flex-shrink:0;margin-top:1px}
+.nt{font-size:11.5px;color:#5a4a00;line-height:1.45}
+.cta-row{display:grid;border-top:1px solid #ede8f7}
+.cta-row.cols-3{grid-template-columns:1fr 1fr 1fr}
+.cta-row.cols-2{grid-template-columns:1fr 1fr}
+.cb{background:none;border:none;border-right:1px solid #ede8f7;padding:.8rem .4rem;font-size:11px;font-weight:700;color:#542E91;cursor:pointer;transition:background .15s;display:flex;flex-direction:column;align-items:center;gap:4px;line-height:1.2}
+.cb:last-child{border-right:none}.cb:hover{background:#f5f0fc}
+.ci{font-size:15px}
+.ov{display:none;position:fixed;inset:0;background:rgba(20,10,50,.6);z-index:1000;align-items:center;justify-content:center;padding:1.5rem;backdrop-filter:blur(4px)}
+.ov.on{display:flex}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:820px;max-height:88vh;overflow-y:auto;position:relative;box-shadow:0 24px 80px rgba(20,10,50,.35)}
+.mh{background:linear-gradient(135deg,#3a1f6e,#6b3db8);padding:1.5rem 1.75rem 1.25rem;border-radius:20px 20px 0 0;position:sticky;top:0;z-index:2}
+.mt{font-size:1.1rem;font-weight:800;color:#FDDC06;letter-spacing:-.01em}
+.ms{font-size:12px;color:rgba(255,255,255,.6);margin-top:.2rem}
+.mc{position:absolute;top:1.1rem;right:1.25rem;background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.mc:hover{background:rgba(255,255,255,.3)}
+.mb{padding:1.5rem 1.75rem}
+.mb p{font-size:13.5px;color:#3a3060;line-height:1.7;margin-bottom:.75rem}
+.fi{display:flex;gap:10px;align-items:flex-start;margin-bottom:.55rem}
+.fd{width:7px;height:7px;border-radius:50%;background:#542E91;flex-shrink:0;margin-top:5px}
+.fi span{font-size:13px;color:#3a3060;line-height:1.55}
+.sl2{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#542E91;margin-bottom:.6rem;margin-top:1.1rem}
+.wb{background:#fffbea;border:1px solid #FDDC06;border-radius:10px;overflow:hidden;margin-top:.5rem}
+.dl{display:flex;flex-wrap:wrap;gap:8px;margin-top:.5rem}
+.dlink{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#542E91;background:#ede9fc;padding:7px 16px;border-radius:20px;text-decoration:none;transition:background .15s}
+.dlink:hover{background:#d6cff5}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Paid Media &amp; Technology</div>
+  <h1>HX &amp; WeDiscover</h1>
+  <div class="hdiv"></div>
+</header>
+<div class="grid" id="grid"></div>
+<div class="ov" id="ov">
+  <div class="modal" id="modal">
+    <div class="mh"><div class="mt" id="mt"></div><div class="ms" id="ms"></div><button class="mc" id="mc">✕</button></div>
+    <div class="mb" id="mb"></div>
+  </div>
+</div>
+<script>
+const GRAPHIC_LINKS = {
+  audience:[
+    {label:'View: Audience Split & CVR', url:'https://d.pr/i/P0DW7b'},
+    {label:'View: Technical Pipeline', url:'https://d.pr/i/JlQC6G'}
+  ],
+  vbb:[
+    {label:'Step 1 — Current', url:'https://d.pr/i/snEtf6'},
+    {label:'Step 2 — Next', url:'https://d.pr/i/ODHlta'},
+    {label:'Step 3 — Our Goal', url:'https://d.pr/i/ot6UFM'},
+    {label:'Step 4 — Less than 1% of advertisers are here', url:'https://d.pr/i/pZ3EHq'}
+  ]
+};
+
+const P=[
+  {
+    id:'attr', title:'New Attribution Model',
+    sub:'Trading group attribution and revised CPAs across all channels.',
+    status:'live', lbl:'Live',
+    tabs:['desc','details','links'],
+    tabLabels:['📋 Description','🔍 Details','🔗 Links'],
+    m:[{l:'Scale',v:'1.4M vs 1.04M bookings'},{l:'Impact',v:'Revised CPAs (TBD)',hi:true}],
+    next:'PPC Team Workshop Deep Dive — 23 Mar',
+    desc:'The Custom Attribution model is complete and already in use. It provides an unbiased, comparable view of attributed value per channel — moving away from platform-reported numbers.\n\nWith custom attribution, we can now begin to use the model to learn about how HX\'s marketing channels interact. Beyond the ability to compare different models and their effect on attribution, we are also able to investigate customer journey data to understand what touch points our customers are interacting with.\n\nMore bookings were influenced by PPC at some point in the customer journey than we previously measured. We are currently evaluating PPC only on a last-click basis — the Scale KPI illustrates the gap: 1.4M bookings with a PPC influence vs 1.04M classed as PPC on last-click.\n\nWe should be able to apply a more aggressive tCPA bid strategy with an outcome of meaningful volume improvement, within a profitable model.',
+    findings:[
+      '1.4M bookings with PPC influence vs 1.04M on last-click — 35% more attributed volume',
+      'Revised CPAs enable more accurate, confident optimisation decisions',
+      'Enables confident channel comparison across all paid activity',
+      'Foundation for moving BAU optimisation to custom attribution view'
+    ],
+    links:[
+      {label:'📊 Trading Group Attribution Dashboard', url:'https://holidayextras.eu.looker.com/dashboards/18919?Booked%20Trading%20Group=&Lookback%20Days=28&Booking%20Date%20Date=12%20month'},
+      {label:'🔍 Attribution Explorer', url:'https://holidayextras.eu.looker.com/explore/general/met_paid_search_custom_attribution__detail?qid=TfrBkFsPf5dcZvt1Oyk3ri&toggle=fil'},
+      {label:'📈 Trading Group Credits', url:'https://holidayextras.eu.looker.com/dashboards/18040?Rid=D%2CI&Medium+Type=&New+Customer='}
+    ],
+    graphic:null, warn:false
+  },
+  {
+    id:'mv', title:'Marginal Value',
+    sub:'Redistribute UK paid search budget to maximise incremental profit per pound spent.',
+    status:'live', lbl:'Live',
+    tabs:['desc','details','links'],
+    tabLabels:['📋 Description','🔍 Details','🔗 Links'],
+    m:[{l:'Target GP uplift p.a.',v:'~£429k',hi:true},{l:'Current result (+3.65% CVR)',v:'~£330k',hi:true}],
+    next:'UK optimisation ongoing — DE roll out',
+    desc:'Rather than optimising to average efficiency, Marginal Value asks: where does the next pound generate the greatest incremental profit? Google Ads simulation data combined with HX margin-per-booking data enables intelligent budget redistribution — not spend increase.\n\nAfter a successful test (Aug–Oct 2025), the solution is now live across eligible UK accounts.',
+    findings:[
+      '+3.65% statistically significant uplift in conversions during test',
+      '+1,398 incremental conversions over ~6 weeks',
+      '~£330k annualised profit impact (conservative lower-bound)',
+      'HX bookings accelerated vs LGP benchmark from August onwards'
+    ],
+    links:[
+      {label:'📄 Full Results Paper', url:'https://docs.google.com/document/d/1f7bhj-V-ldSXeJwlgdWIT08QhZa-vSfvzPhy4ZfViPI/edit'},
+      {label:'📊 Live Looker Dashboard', url:'https://holidayextras.eu.looker.com/dashboards/19405?Pre+Period=2025%2F04%2F01+to+2025%2F08%2F18&Post+Period=2025%2F08%2F18+to+2025%2F11%2F03&PPC+Brand=HX&Product+Category=-CAR%2C-FTK%2C-TRF&Agent+Code=-BF110%2C-WT289%2C-WT283%2C-BF407%2C-WU156&Agent+Name=%25-G-%25&Airport+Code=-MAN%2C-EMA%2C-STN'}
+    ],
+    graphic:null, warn:false
+  },
+  {
+    id:'bit', title:'Brand Incrementality',
+    sub:'Phase 1 complete: incremental value proven for UK & DE. Now finding the efficiency sweet spot.',
+    status:'inflight', lbl:'In Flight',
+    tabs:['desc','details'],
+    tabLabels:['📋 Description','🔍 Details'],
+    m:[{l:'Avg. Incrementality Rate',v:'~44%',hi:true},{l:'Potential spend saving',v:'Up to £200k',hi:true}],
+    next:'10p step-by-step CPC reduction — UK and DE — to find the sweet spot',
+    desc:'Phase 1 is complete: we have proven the incremental value of branded paid search activity across UK and DE accounts. Incrementality rates of 35–50% confirm that branded paid sessions add real value beyond organic.\n\nPhase 2 is now underway: finding the efficiency sweet spot. Rather than simply cutting spend, we are systematically testing where the minimum effective CPC lies — the point at which we retain incremental sessions while reducing unnecessary spend.',
+    findings:[
+      'Phase 1 completed — incremental value proven across UK and DE',
+      'Purple Parking HX: 47.6% incremental rate',
+      'Holiday Extras (Insurance): 43.2% incremental rate',
+      'Holiday Extras (Account): 37.6% incremental rate',
+      'Airparks Euro: 43.7% incremental rate',
+      'Saving £500k is unlikely due to competitor landscape — the goal is finding the sweet spot, not maximum cuts'
+    ],
+    links:[], graphic:null, warn:true
+  },
+  {
+    id:'aud', title:'Audience Modelling',
+    sub:'Propensity model classifies returning visitors as Hot / Warm / Cold to sharpen bidding signals.',
+    status:'inflight', lbl:'In Flight',
+    tabs:['desc','test','details'],
+    tabLabels:['📋 Description','🧪 Test','🔍 Details'],
+    m:[{l:'Go Live',v:'Late March',hi:true},{l:'Predicted uplift',v:'+5–15% CVR',hi:true}],
+    next:'A/B test go live end of March',
+    desc:'This model uses first-party website behaviour (booking flow depth, device, product type, flight detail inclusion) to predict conversion likelihood for visitors returning within 7 days.\n\nHot, Warm and Cold audiences are uploaded to Google Ads as observation signals — Smart Bidding redistributes budget toward higher-converting segments without fixed bid adjustments.',
+    findings:[
+      '15% Hot / 23% Warm / 62% Cold of all returning visitors',
+      'Hot audience converts at ~8x the rate of Cold visitors',
+      'Primary KPI: collective CPA of test vs control',
+      'Predicted: 15% uplift in test group, 5% overall uplift'
+    ],
+    testContent:`
+      <div class="fi"><div class="fd"></div><span>Test in accounts outside MROAS testing — covering the remaining share of UK spend not already optimised via Marginal ROAS.</span></div>
+      <div class="fi"><div class="fd"></div><span>50% control (standard bidding) vs 50% propensity-informed bidding.</span></div>
+      <div class="fi"><div class="fd"></div><span>Test structure: 90-day window, 2-week warm-up period, first analysis at 6 weeks.</span></div>
+      <div class="fi"><div class="fd"></div><span>Primary KPI: collective CPA of test vs control. Focus on overall efficiency, not just individual segments.</span></div>`,
+    links:[], graphic:'audience', warn:false
+  },
+  {
+    id:'vbb', title:'Value-Based Bidding',
+    sub:'4-stage journey from volume-based tCPA toward full CLV-modelled tROAS bidding.',
+    status:'planned', lbl:'Planned',
+    tabs:['desc','details'],
+    tabLabels:['📋 Description','🔍 Details'],
+    m:[{l:'Current stage',v:'Step 1 — tCPA'},{l:'Next — April',v:'Step 2 tROAS',hi:true}],
+    next:'Tech supports media team on tROAS test with booking value signal.',
+    desc:'Current tCPA strategy treats all bookings as equal — ignoring their relative commercial value. The 4-step journey moves toward fully CLV-informed bidding, with validation at each stage before progressing.\n\nStep 2 (Next): tROAS with booking value signal. Step 3: CLV modelling for new customers. Step 4 (Ideal): Full CLV model across new and existing customers.',
+    findings:[
+      'Step 1 (Now): tCPA — volume only, all bookings treated as equal',
+      'Step 2 (~April): tROAS + booking value signal — drives higher value bookings',
+      'Step 3 (Future): tROAS + CLV. Account for the future value of new customer bookings — the next step to long-term value based bidding. We are accounting for the acquisition benefit of acquiring a new customer by estimating their future value.',
+      'Step 4 (Ideal): Full CLV for new AND existing customers — less than 1% of advertisers are here',
+      'Pre-processing of value signal may be needed if booking value distribution is heavily skewed'
+    ],
+    links:[], graphic:'vbb', warn:false
+  }
+];
+
+function sclass(s){return s==='live'?'sl':s==='inflight'?'si':'sp'}
+function dclass(s){return s==='live'?'sdl':s==='inflight'?'sdi':'sdp'}
+
+const grid=document.getElementById('grid');
+P.forEach(p=>{
+  const cols=p.tabs.length;
+  const btns=p.tabs.map((t,i)=>`<button class="cb" data-id="${p.id}" data-panel="${t}">${p.tabLabels[i]}</button>`).join('');
+  const card=document.createElement('div');
+  card.className='card';
+  card.innerHTML=`
+    <div class="ca ${p.status}"></div>
+    <div class="card-top">
+      <div class="card-meta"><span class="sbadge ${sclass(p.status)}"><span class="sd ${dclass(p.status)}"></span>${p.lbl}</span></div>
+      <div class="card-title">${p.title}</div>
+      <div class="card-sub">${p.sub}</div>
+    </div>
+    <div class="card-metrics">${p.m.map(m=>`<div class="metric"><div class="ml">${m.l}</div><div class="mv${m.hi?' hi':''}">${m.v}</div></div>`).join('')}</div>
+    <div class="card-next"><span class="np">Next</span><span class="nt">${p.next}</span></div>
+    <div class="cta-row cols-${cols}">${btns}</div>`;
+  grid.appendChild(card);
+});
+
+const ov=document.getElementById('ov'),mtEl=document.getElementById('mt'),msEl=document.getElementById('ms'),mbEl=document.getElementById('mb');
+
+function graphicSection(key,label){
+  const links=(GRAPHIC_LINKS[key]||[]).map(l=>`<a class="dlink" href="${l.url}" target="_blank">↗ ${l.label}</a>`).join('');
+  return `<div class="sl2">${label}</div><div class="dl" style="flex-direction:column;align-items:flex-start">${links}</div>`;
+}
+
+function spendTable(){
+  const accounts=[
+    {name:'Purple Parking HX',spend:321000,currency:'£',incr:47.6},
+    {name:'Holiday Extras (Account)',spend:219000,currency:'£',incr:37.6},
+    {name:'Holiday Extras (Insurance)',spend:62000,currency:'£',incr:43.2},
+    {name:'Airparks Euro (DE)',spend:352000,currency:'€',incr:43.7},
+  ];
+  const fmt=(v,c)=>`${c}${(v/1000).toFixed(0)}k`;
+  const rows=accounts.map(a=>{
+    const maxSave=`${a.currency}${Math.round(a.spend*(1-a.incr/100)/1000)}k`;
+    return `<tr>
+      <td style="padding:8px 10px;font-size:12.5px;color:#3a3060;border-bottom:1px solid #f0ecfa">${a.name}</td>
+      <td style="padding:8px 10px;font-size:12.5px;font-weight:700;color:#3a3060;border-bottom:1px solid #f0ecfa;text-align:right">${fmt(a.spend,a.currency)}</td>
+      <td style="padding:8px 10px;font-size:12.5px;font-weight:700;color:#542E91;border-bottom:1px solid #f0ecfa;text-align:right">${a.incr}%</td>
+      <td style="padding:8px 10px;font-size:12.5px;font-weight:700;color:#A32D2D;border-bottom:1px solid #f0ecfa;text-align:right">${maxSave}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="sl2">Spend & Maximum Savings Potential</div>
+  <div class="wb">
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr style="background:#fff8e0">
+        <th style="padding:8px 10px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#7a5a00;text-align:left">Account</th>
+        <th style="padding:8px 10px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#7a5a00;text-align:right">12m Spend</th>
+        <th style="padding:8px 10px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#7a5a00;text-align:right">Incremental</th>
+        <th style="padding:8px 10px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#A32D2D;text-align:right">Max. Saving</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p style="font-size:11px;color:#7a5a00;padding:.6rem 1rem;margin:0">⚠ Max. saving = spend × (100% − incrementality rate).</p>
+  </div>`;
+}
+
+function openModal(p,panel){
+  mtEl.textContent=p.title;
+  let html='';
+  if(panel==='desc'){
+    msEl.textContent='Project Description';
+    html=`<p>${p.desc.replace(/\n\n/g,'</p><p>')}</p>`;
+    if(p.graphic==='audience') html+=graphicSection('audience','Charts & Pipeline');
+    if(p.graphic==='vbb') html+=graphicSection('vbb','The 4-Step Journey');
+    if(p.warn) html+=spendTable();
+  } else if(panel==='test'){
+    msEl.textContent='Upcoming Test';
+    html=p.testContent||'';
+  } else if(panel==='details'){
+    msEl.textContent='Key Findings';
+    html=p.findings.map(f=>`<div class="fi"><div class="fd"></div><span>${f}</span></div>`).join('');
+  } else if(panel==='links'){
+    msEl.textContent='Links & Resources';
+    html=p.links.length
+      ?`<div class="dl">${p.links.map(l=>`<a class="dlink" href="${l.url}" target="_blank">${l.label}</a>`).join('')}</div>`
+      :`<p style="color:#a09ab5;font-size:13px">No external links available for this project.</p>`;
+  }
+  mbEl.innerHTML=html;
+  ov.classList.add('on');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){ov.classList.remove('on');document.body.style.overflow='';}
+document.getElementById('mc').onclick=closeModal;
+ov.addEventListener('click',e=>{if(e.target===ov)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+grid.addEventListener('click',e=>{
+  const btn=e.target.closest('.cb');
+  if(!btn)return;
+  const p=P.find(x=>x.id===btn.dataset.id);
+  if(p)openModal(p,btn.dataset.panel);
+});
+</script>
+</body>
+</html>
